@@ -1,0 +1,5 @@
+[project]
+name = "fly-hearing-lab"
+version = "1.0.0"
+requires-python = ">=3.11"
+dependencies = ["flyconn[sim]>=0.4", "numpy", "scipy", "torch", "pyyaml", "matplotlib", "pandas", "pyarrow"]

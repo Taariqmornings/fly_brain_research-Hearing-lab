@@ -1,0 +1,22 @@
+{
+  "name": "fly-hearing-lab",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --port 4173 --strictPort",
+    "smoke": "node scripts/smoke.mjs",
+    "shots": "node scripts/screenshots.mjs"
+  },
+  "dependencies": {
+    "three": "^0.170.0"
+  },
+  "devDependencies": {
+    "@types/three": "^0.170.0",
+    "puppeteer-core": "^23.11.1",
+    "typescript": "^5.7.3",
+    "vite": "^6.0.7"
+  }
+}

@@ -1,0 +1,87 @@
+# Fly Hearing Lab configuration. Every value marked ASSUMPTION is a modelling choice, not a measurement.
+datasets:
+  male: malecns@1.0
+  female: flywire@783
+
+data:
+  cache: data/flyconn
+  fw_positions_url: https://raw.githubusercontent.com/flyconnectome/flywire_annotations/main/supplemental_files/Supplemental_file1_neuron_annotations.tsv
+  fw_voxel_nm: [4, 4, 40]
+
+subnet:
+  seed_regex: "^JO-"
+  hops: 3
+  min_weight: 5
+  max_neurons: 8000
+  include_targets: true   # targets outside 3 hops are added (inputs from subnet only) so the metric is defined
+  # Patterns are matched (case-insensitive) against cell_type plus synonyms/instance text.
+  targets:
+    song_detectors: ["\\bvpoEN\\b", "\\bpC2[lm]?\\b", "\\bvPN1\\b"]
+    receptivity: ["\\bpC1[a-e]?\\b", "\\bvpoDN\\b", "\\bDNp13\\b", "\\bP1[a-e]?\\b"]   # vPR/pMN are VNC (male CNS only) -> excluded for a fair comparison
+  # Pathway stage by name (first match wins); unmatched neurons get a stage by hop distance.
+  stages:
+    - [jo, "^JO-"]
+    - [receptivity, "\\bpC1[a-e]?\\b|\\bvpoDN\\b|\\bDNp13\\b|\\bP1[a-e]?\\b"]
+    - [song, "\\bvpoEN\\b|\\bpC2[lm]?\\b|\\bvPN1\\b"]
+    - [ammc, "AMMC|^aPN|^B1|^SAD"]
+    - [wedge, "^WED|^WV"]
+    - [song, "^AVLP"]
+  hop_stage: {1: ammc, 2: wedge, 3: song}
+  stage_order: [jo, ammc, wedge, song, receptivity]
+  stage_labels: {jo: "Hearing neurons (JO)", ammc: "Hearing centre (AMMC)", wedge: "Wedge (WED)", song: "Song detectors (AVLP)", receptivity: "Receptivity cells"}
+
+signs:
+  acetylcholine: 1
+  gaba: -1
+  glutamate: -1     # Shiu et al. 2024 convention (GluCl-mediated inhibition)
+  default: 0
+  low_conf_threshold: 0.6   # ASSUMPTION: nt_conf below this is "low confidence" for the sign-flip control
+
+sim:
+  # Shiu et al. 2024 LIF parameters (Nature 634:210). w_syn per dataset from flyconn.default_params
+  # (MaleCNS uses flyconn's protocol re-calibration 0.188 mV; FlyWire uses Shiu's 0.275 mV).
+  dt_ms: 0.1
+  v_rest_mv: -52.0
+  v_reset_mv: -52.0
+  v_threshold_mv: -45.0
+  tau_membrane_ms: 20.0
+  tau_synapse_ms: 5.0
+  t_refractory_ms: 2.2
+  delay_ms: 1.8
+  w_syn_mv: {malecns@1.0: 0.188, flywire@783: 0.275}
+  jo_max_rate_hz: 250.0     # ASSUMPTION: JO drive saturates at this Poisson rate (Shiu-style input coding)
+  jo_baseline_hz: 2.0       # ASSUMPTION: spontaneous JO rate in silence
+  device: auto
+
+ear:
+  fs: 10000
+  env_cutoff_hz: 80.0       # ASSUMPTION: envelope low-pass keeps pulse rhythm (pulses ~5-15 ms apart up to ~90 ms)
+  drive_ref_rms: 0.05       # ASSUMPTION: band RMS that gives half-maximal drive (input normalised to unit RMS)
+  jitter_gain_sd: 0.15      # ASSUMPTION: lognormal per-neuron gain jitter
+  jitter_cf_sd: 0.05        # ASSUMPTION: per-neuron centre-frequency jitter (fraction)
+  # ASSUMPTION (all bands): JO-A vibration-sensitive, higher-frequency tuned; JO-B vibration-sensitive,
+  # lower-frequency tuned (Kamikouchi et al. 2009 Nature 458:165; Yorozu et al. 2009 Nature 458:201;
+  # Matsuo et al. 2014). JO-C/E respond to static deflection (wind/gravity) -> near-DC low-pass, weak to song.
+  # JO-D intermediate (Matsuo 2014). JO-F/mz uncharacterised -> broad, weak.
+  bands:
+    A:  {cf: 400.0, q: 1.2, gain: 1.0}
+    B:  {cf: 150.0, q: 1.2, gain: 1.0}
+    D:  {cf: 250.0, q: 1.0, gain: 0.6}
+    C:  {cf: 0.0, lowpass: 20.0, gain: 0.15}
+    E:  {cf: 0.0, lowpass: 20.0, gain: 0.15}
+    F:  {cf: 250.0, q: 0.7, gain: 0.3}
+    other: {cf: 250.0, q: 0.7, gain: 0.3}
+
+stimuli:
+  duration_s: 1.0
+  pulse: {carrier_hz: 220.0, ipi_ms: 35.0, cycles: 3.0}
+  sine: {carrier_hz: 150.0}
+  ramp_ms: 20.0
+
+experiments:
+  seeds: [0, 1, 2, 3, 4]
+  quick: {ipi_ms: [15, 35, 60, 90], carrier_hz: [100, 220, 350, 500], duration_s: 0.5}
+  full:  {ipi_ms: [15, 20, 25, 30, 35, 40, 45, 50, 60, 70, 80, 90], carrier_hz: [100, 150, 200, 250, 300, 350, 400, 450, 500], duration_s: 1.0}
+  weight_threshold_alt: 10
+  bootstrap: 2000
+  cpu_trial_batch: 48       # trials simulated together on CPU
