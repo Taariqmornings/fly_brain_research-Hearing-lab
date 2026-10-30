@@ -1,0 +1,43 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it, and cite the connectome datasets and Shiu et al. 2024 listed in the README."
+title: "Fly Hearing Lab: simulating male and female Drosophila hearing pathways on connectomes"
+type: software
+authors:
+  - family-names: Ebrahim
+    given-names: Taariq
+repository-code: "https://github.com/Taariqmornings/fly_brain_research"
+license: MIT
+version: 1.0.0
+date-released: 2026-10-30
+keywords: [Drosophila, connectome, auditory system, leaky integrate-and-fire, courtship song, FlyWire, MaleCNS]
+references:
+  - type: article
+    title: "A Drosophila computational brain model reveals sensorimotor processing"
+    authors: [{family-names: Shiu, given-names: Philip K.}]
+    journal: Nature
+    volume: 634
+    start: 210
+    year: 2024
+    doi: 10.1038/s41586-024-07763-9
+  - type: article
+    title: "Neuronal wiring diagram of an adult brain"
+    authors: [{family-names: Dorkenwald, given-names: Sven}]
+    journal: Nature
+    volume: 634
+    start: 124
+    year: 2024
+    doi: 10.1038/s41586-024-07558-y
+  - type: article
+    title: "Whole-brain annotation and multi-connectome cell typing of Drosophila"
+    authors: [{family-names: Schlegel, given-names: Philipp}]
+    journal: Nature
+    volume: 634
+    start: 139
+    year: 2024
+    doi: 10.1038/s41586-024-07686-5
+  - type: article
+    title: "Sexual dimorphism in the complete Drosophila male central nervous system connectome"
+    authors: [{family-names: Berg, given-names: Stuart}]
+    journal: Cell
+    year: 2026
+    doi: 10.1016/j.cell.2026.08.015

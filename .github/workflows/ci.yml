@@ -1,0 +1,36 @@
+name: CI
+on:
+  push: { branches: [main] }
+  pull_request:
+jobs:
+  web:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: web } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm, cache-dependency-path: web/package-lock.json }
+      - run: npm ci
+      - run: npm run build
+  pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - run: pip install numpy scipy pyyaml
+      - name: Byte-compile pipeline
+        run: python -m compileall -q pipeline docs
+      - name: Ear model and stimuli smoke test (no connectome download)
+        working-directory: pipeline
+        run: |
+          python - <<'PY'
+          import numpy as np, yaml
+          from ear import jo_drive, stimulus
+          cfg = yaml.safe_load(open("config.yaml"))
+          for k in ("pulse", "sine", "noise", "scrambled"):
+              x = stimulus(k, cfg, duration_s=0.2)
+              d = jo_drive(x, cfg["ear"]["fs"], ["A", "B", "E", "other"], cfg["ear"])
+              assert d.shape == (4, len(x)) and np.isfinite(d).all() and 0 <= d.min() and d.max() < 1, k
+          print("ear model OK")
+          PY

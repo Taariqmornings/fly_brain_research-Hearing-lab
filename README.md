@@ -1,5 +1,9 @@
 # Fly Hearing Lab
 
+[![CI](https://github.com/Taariqmornings/fly_brain_research/actions/workflows/ci.yml/badge.svg)](https://github.com/Taariqmornings/fly_brain_research/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/code-MIT-blue.svg)](LICENSE)
+![Data: MaleCNS v1.0 + FlyWire v783](https://img.shields.io/badge/data-MaleCNS%20v1.0%20%2B%20FlyWire%20v783-orange.svg)
+
 **Play a sound into simulated fruit-fly brains and watch the spikes travel through the hearing circuit: a male brain (MaleCNS v1.0) and a female brain (FlyWire FAFB v783), side by side.**
 
 ![Fly Hearing Lab: pulse song replayed through both brains](docs/images/01-explore-overview.png)
@@ -220,5 +224,7 @@ data/              downloaded datasets and outputs (not committed; recreated by 
 **Code:** [MIT licence](LICENSE). Use, copy, modify and redistribute it freely, including commercially; just keep the copyright notice.
 
 **Data:** the connectome datasets have their own licences, separate from the code. flyconn distributes both datasets under CC BY 4.0. FlyWire was earlier released under CC BY-NC 4.0, so check each data portal's current terms before reusing the data. The connectome data is **not** included in this repository; the pipeline downloads it.
+
+**Citing:** see [CITATION.cff](CITATION.cff); GitHub's "Cite this repository" button reads it.
 
 **Simulation outputs are model predictions.**
