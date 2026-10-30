@@ -125,7 +125,35 @@ An effect counts as **robust** only if it survives the threshold and sign-uncert
 ## 5. Results
 
 <!-- RESULTS:START -->
-_Results are being finalised from the full sweep. See [docs/RESULTS.md](docs/RESULTS.md) for every number._
+**Full sweep:** 12 IPIs × 9 carriers × 5 seeds, 1 s per trial, in both connectomes, plus all four controls. That is 5,560 simulated trials in 3.3 h on CPU. Every number is a **model prediction** with a bootstrap 95% CI over seeds.
+
+**Validation check:** does the target set fire more for pulse song (35 ms, 220 Hz) than for scrambled song and white noise?
+
+| | Pulse song | Scrambled | Noise | Sine | Pulse − scrambled | Pulse − noise | Result |
+|---|---|---|---|---|---|---|---|
+| **Male** (MaleCNS) | 0.23 Hz | 1.47 Hz | 0.64 Hz | 1.50 Hz | −1.24 [−1.32, −1.15] | −0.41 [−0.51, −0.32] | **FAIL** |
+| **Female** (FlyWire) | 0.00 Hz | 0.00 Hz | 0.00 Hz | 0.00 Hz | 0.00 [0.00, 0.00] | 0.00 [0.00, 0.00] | **FAIL** |
+
+**Key findings**
+
+1. **Male targets do respond, but they prefer sound energy, not the song rhythm.**
+   - Scrambled song, noise and sine song all drive the targets more than real pulse song.
+   - On the pulse grid, the response is highest at the *fastest* rate tested (**15 ms IPI / 200 Hz, 1.58 Hz**) and falls steadily as the IPI grows. There is no peak near the natural ~35 ms.
+   - The scrambled grid sits at about 1.5 Hz everywhere.
+2. **In the female connectome the signal dies before it reaches the targets.**
+   - Mean rate per neuron for pulse song: JO **69.3 Hz** → AMMC **3.4** → wedge **0.15** → song detectors **0.01** → receptivity **0.00**.
+   - The target set is silent for every stimulus.
+3. **No effect passed the robustness test.**
+   - Male IPI tuning (0.70 Hz [0.68, 0.72]) and the male–female difference (0.23 Hz) are significant. Both survive the weight-≥10 and sign-flip controls.
+   - Both are **larger on the degree-preserving shuffled wiring** (2.66 Hz and 1.83 Hz). That means they come from network density and input drive, not from the specific connectome.
+   - The female effects are absent at baseline.
+
+| Effect (Hz) | Baseline | Weight ≥ 10 | Signs flipped | Shuffled wiring | Verdict |
+|---|---|---|---|---|---|
+| Male: pulse − scrambled | −1.24 | −0.62 | −1.62 | −4.18 | not robust |
+| Male: IPI tuning | 0.70 | 0.29 | 0.80 | 2.66 | not robust |
+| Male − female (pulse) | 0.23 | 0.07 | 0.24 | 1.83 | not robust |
+| Female: any effect | 0.00 | 0.00 | ≈ 0 | non-zero | not robust |
 <!-- RESULTS:END -->
 
 ![Sweep heatmaps from the pipeline](docs/images/13-pipeline-heatmaps.png)
@@ -137,7 +165,23 @@ All tables (subnetworks, validation, the full grids, robustness, stage-by-stage 
 ## 6. Conclusion
 
 <!-- CONCLUSION:START -->
-_To be written from the full-sweep results._
+**The hypothesis is not supported by this model.** Wiring diagrams plus a uniform leaky integrate-and-fire model, with no tuning, do **not** make the fly's song circuit prefer its own species' song in either sex. Specifically:
+
+- **Male (MaleCNS).** Sound reaches the song-detector and receptivity cells, but they track how much sound arrives, not its rhythm. Faster pulse trains and scrambled sound drive them harder, and a shuffled network with the same connection counts does the same, only more strongly.
+- **Female (FlyWire).** Activity fades out between the AMMC and the wedge, so the targets never fire. Possible causes, none tested yet:
+  - the 8,000-neuron cap cutting inputs;
+  - FlyWire's sparser edge table (2.7 M vs 25.6 M edges);
+  - the single global synaptic weight.
+
+None of these is proof that the real circuit lacks song selectivity. Experiments show that real flies *do* prefer conspecific IPIs. The result instead suggests that the **connectome alone is not enough** in this kind of model. Song tuning likely also depends on things the model leaves out, such as cell-specific membrane dynamics, synaptic time constants and adaptation, neuromodulation, and graded (non-spiking) signalling early in the pathway.
+
+**Next steps**
+- Raise or remove the neuron cap for the female network.
+- Use transmitter-specific weights and time constants.
+- Add short-term plasticity or adaptation to AMMC/wedge neurons.
+- Compare against recorded pC2/vpoEN tuning curves.
+
+The pipeline, controls and web app are built so that each of these changes can be swapped in and re-tested with one command.
 <!-- CONCLUSION:END -->
 
 ---
