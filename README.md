@@ -217,6 +217,8 @@ data/              downloaded datasets and outputs (not committed; recreated by 
 - **Neuron model:** Shiu et al. 2024, *Nature* 634:210.
 - **Data access:** [flyconn](https://pypi.org/project/flyconn/).
 
-flyconn distributes both datasets under CC BY 4.0. FlyWire was earlier released under CC BY-NC 4.0, so check each data portal's current terms before reusing the data. The connectome data is **not** included in this repository; the pipeline downloads it.
+**Code:** [MIT licence](LICENSE). Use, copy, modify and redistribute it freely, including commercially; just keep the copyright notice.
+
+**Data:** the connectome datasets have their own licences, separate from the code. flyconn distributes both datasets under CC BY 4.0. FlyWire was earlier released under CC BY-NC 4.0, so check each data portal's current terms before reusing the data. The connectome data is **not** included in this repository; the pipeline downloads it.
 
 **Simulation outputs are model predictions.**
