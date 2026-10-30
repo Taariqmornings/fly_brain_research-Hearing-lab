@@ -1,6 +1,6 @@
 # Fly Hearing Lab
 
-[![CI](https://github.com/Taariqmornings/fly_brain_research/actions/workflows/ci.yml/badge.svg)](https://github.com/Taariqmornings/fly_brain_research/actions/workflows/ci.yml)
+[![CI](https://github.com/Taariqmornings/fly_brain_research-Hearing-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/Taariqmornings/fly_brain_research-Hearing-lab/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/code-MIT-blue.svg)](LICENSE)
 ![Data: MaleCNS v1.0 + FlyWire v783](https://img.shields.io/badge/data-MaleCNS%20v1.0%20%2B%20FlyWire%20v783-orange.svg)
 

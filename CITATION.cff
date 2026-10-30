@@ -5,7 +5,7 @@ type: software
 authors:
   - family-names: Ebrahim
     given-names: Taariq
-repository-code: "https://github.com/Taariqmornings/fly_brain_research"
+repository-code: "https://github.com/Taariqmornings/fly_brain_research-Hearing-lab"
 license: MIT
 version: 1.0.0
 date-released: 2026-10-30
